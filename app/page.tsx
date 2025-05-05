@@ -4,6 +4,7 @@ import SearchBar from "@/components/ui/search/search-bar";
 import type { MovieBasicInfos } from "@/types";
 import { fetchRecentMovies } from "@/utils/queries";
 import { Clock, Film, Star, TrendingUp } from "lucide-react";
+import Link from "next/link";
 import { Suspense } from "react";
 
 function LatestMovieWrapper({
@@ -14,7 +15,11 @@ function LatestMovieWrapper({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
       {latestMovies.map((movie) => (
-        <a href={`/movie/${movie.imdbID}`} key={movie.imdbID} className="group">
+        <Link
+          href={`/movie/${movie.imdbID}`}
+          key={movie.imdbID}
+          className="group"
+        >
           <Card
             key={movie.imdbID}
             className="overflow-hidden bg-background/50 backdrop-blur-sm border border-muted/20 rounded-xl transition-all duration-300 group-hover:shadow-xl group-hover:shadow-primary/5 group-hover:border-primary/20"
@@ -51,7 +56,7 @@ function LatestMovieWrapper({
               </p>
             </CardContent>
           </Card>
-        </a>
+        </Link>
       ))}
     </div>
   );

@@ -21,13 +21,28 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Movie } from "@/types";
 
-const API_KEY = "82571ea7";
-const BASE_URL = `http://www.omdbapi.com/?apikey=${API_KEY}`;
+const OMDB_BASE_URL = `http://www.omdbapi.com/?apikey=${process.env.NEXT_PUBLIC_IMDB_KEY!}`;
 
 async function fetchMovieById(id: string): Promise<Movie> {
-  const response = await fetch(`${BASE_URL}&i=${id}`);
+  const response = await fetch(`${OMDB_BASE_URL}&i=${id}`);
   const data = await response.json();
   return data;
+}
+
+async function fetchMovieTrailer(title: string, year: string): Promise<string> {
+  const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY!;
+  const searchQuery = `${title} ${year} trailer`;
+  const searchResponse = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&key=${apiKey}`,
+  );
+  const searchData = await searchResponse.json();
+
+  if (searchData.items.length === 0) {
+    return "";
+  }
+
+  const trailer = searchData.items[0];
+  return `https://www.youtube.com/embed/${trailer.id.videoId}`;
 }
 
 function MovieRating({ source, value }: { source: string; value: string }) {
@@ -73,11 +88,14 @@ function MovieInfoItem({
   );
 }
 
-function MovieDetails({ movie }: { movie: Movie }) {
-  // Split genres into array for badges
+function MovieDetails({
+  movie,
+  trailerUrl,
+}: {
+  movie: Movie;
+  trailerUrl: string;
+}) {
   const genres = movie.Genre.split(", ");
-
-  // Format IMDB rating to show stars
   const imdbRating = Number.parseFloat(movie.imdbRating);
   const fullStars = Math.floor(imdbRating);
   const hasHalfStar = imdbRating % 1 >= 0.5;
@@ -85,7 +103,6 @@ function MovieDetails({ movie }: { movie: Movie }) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Movie Poster */}
         <div className="lg:col-span-1">
           <div className="sticky top-8">
             <div className="rounded-lg overflow-hidden shadow-lg">
@@ -103,7 +120,6 @@ function MovieDetails({ movie }: { movie: Movie }) {
               />
             </div>
 
-            {/* Ratings Section (Mobile: Below Poster, Desktop: Below Poster) */}
             <Card className="mt-6 p-4">
               <h3 className="text-lg font-bold mb-4 flex items-center">
                 <Star className="mr-2 h-5 w-5 text-yellow-500" />
@@ -165,10 +181,24 @@ function MovieDetails({ movie }: { movie: Movie }) {
                 )}
               </div>
             </Card>
+
+            {trailerUrl && (
+              <Card className="mt-6 p-4">
+                <h3 className="text-lg font-bold mb-4">Trailer</h3>
+                <iframe
+                  width="100%"
+                  height="315"
+                  src={trailerUrl}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="Movie Trailer"
+                ></iframe>
+              </Card>
+            )}
           </div>
         </div>
 
-        {/* Movie Details */}
         <div className="lg:col-span-2">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold">{movie.Title}</h1>
@@ -197,13 +227,11 @@ function MovieDetails({ movie }: { movie: Movie }) {
 
           <Separator className="my-6" />
 
-          {/* Plot Section */}
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">Plot</h2>
             <p className="text-lg leading-relaxed">{movie.Plot}</p>
           </div>
 
-          {/* Cast & Crew Section */}
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">Cast & Crew</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -232,7 +260,6 @@ function MovieDetails({ movie }: { movie: Movie }) {
             </div>
           </div>
 
-          {/* Additional Info Section */}
           <div className="mb-8">
             <h2 className="text-xl font-bold mb-4">Additional Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -290,12 +317,10 @@ function MovieDetailsSkeleton() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Poster Skeleton */}
         <div className="lg:col-span-1">
           <div className="sticky top-8">
             <Skeleton className="w-full aspect-[2/3] rounded-lg" />
 
-            {/* Ratings Skeleton */}
             <div className="mt-6">
               <Skeleton className="h-12 w-full mb-4" />
               <div className="space-y-4">
@@ -307,7 +332,6 @@ function MovieDetailsSkeleton() {
           </div>
         </div>
 
-        {/* Details Skeleton */}
         <div className="lg:col-span-2">
           <Skeleton className="h-12 w-3/4 mb-2" />
           <Skeleton className="h-6 w-1/2 mb-4" />
@@ -344,7 +368,7 @@ function MovieDetailsSkeleton() {
 }
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const movieId = params.id;
+  const movieId = await params.id;
 
   if (!movieId) {
     return notFound();
@@ -364,5 +388,8 @@ async function MovieDetailsContent({ movieId }: { movieId: string }) {
     return notFound();
   }
 
-  return <MovieDetails movie={movie} />;
+  const trailerUrl = await fetchMovieTrailer(movie.Title, movie.Year);
+  console.log("Trailerurl: ", trailerUrl);
+  // const trailerUrl = "https://www.youtube.com/watch?v=9GEaTTlnXLs";
+  return <MovieDetails movie={movie} trailerUrl={trailerUrl} />;
 }

@@ -9,6 +9,7 @@ export const fetchRecentMovies = async (): Promise<any[]> => {
   try {
     const response = await fetch(
       `${BASE_URL}&s=movie&type=movie&y=${new Date().getFullYear()}&page=1&r=json`,
+      { cache: "force-cache" }, // Enable caching
     );
     const data = await response.json();
 
@@ -35,7 +36,7 @@ export const searchMovies = async (
     url = `${BASE_URL}&s=${query}&type=movie&r=json`;
   }
 
-  const response = await fetch(url);
+  const response = await fetch(url, { cache: "force-cache" }); // Enable caching
   const data = await response.json();
 
   if (data.Response === "True") {
@@ -66,6 +67,7 @@ export const searchSemantic = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ plot: query }), // Send the plot in the request body as JSON
+      cache: "force-cache", // Enable caching
     },
   );
 

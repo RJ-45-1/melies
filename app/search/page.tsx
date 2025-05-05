@@ -55,7 +55,8 @@ function MovieCard({ movie }: { movie: MovieBasicInfosSemanticResults }) {
         <div className="relative aspect-[2/3] w-full">
           <Image
             src={
-              semanticMovie.poster || "/placeholder.svg?height=450&width=300"
+              semanticMovie.poster ||
+              "https://www.istockphoto.com/illustrations/placeholder-image"
             }
             alt={`Movie poster`}
             fill

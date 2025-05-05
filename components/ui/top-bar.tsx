@@ -5,7 +5,7 @@ import SignOutButton from "./signout-button";
 
 export default async function TopBar() {
   const supabase = await createClient();
-  const { data: user } = await supabase.auth.getUser();
+  const { data: session } = await supabase.auth.getSession();
 
   return (
     <div className="w-full flex flex-row justify-between items-center">
@@ -14,7 +14,7 @@ export default async function TopBar() {
       </Link>
 
       <div className="flex gap-4">
-        {user.user ? (
+        {session.session?.user ? (
           <SignOutButton />
         ) : (
           <>
