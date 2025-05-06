@@ -92,9 +92,9 @@ export default function SearchBar() {
 
         <Button
           type="submit"
-          variant="default"
+          variant="ghost"
           size="icon"
-          className="m-1 rounded-full transition-transform duration-300 hover:scale-105"
+          className="m-1 ration-300 hover:scale-105"
           disabled={loading || !query.trim()}
         >
           {loading ? (
