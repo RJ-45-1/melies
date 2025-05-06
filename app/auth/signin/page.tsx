@@ -31,7 +31,7 @@ export default async function SignInPage() {
             Welcome back
           </h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+            Choose a way to connect to Melies
           </p>
 
           <SignInForm />
