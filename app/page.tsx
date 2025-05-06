@@ -74,14 +74,14 @@ export default async function Home() {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 animate-fade-in">
-          Cherchez et notez les meilleurs films
+          Search and note the best movies
         </h1>
 
         <p
           className="text-muted-foreground text-center max-w-2xl mx-auto animate-fade-in-up opacity-0"
           style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
         >
-          Ne perdez plus de temps à chercher un film pendant des heures
+          Don't waste time searching for a movie for hours
         </p>
 
         <div
