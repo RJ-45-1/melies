@@ -19,7 +19,6 @@ export default async function Page({
   const supabase = await createClient();
   const results = await Promise.resolve(searchSemantic(supabase, query));
 
-  console.log(results);
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">

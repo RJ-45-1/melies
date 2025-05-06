@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import LastestMovieSkeleton from "@/components/ui/movies/latest-movie-skeleton";
+import LastestMovieSkeleton from "@/components/ui/movies/skeletons/latest-movie-skeleton";
 import SearchBar from "@/components/ui/search/search-bar";
 import type { MovieBasicInfos } from "@/types";
 import { fetchRecentMovies } from "@/utils/queries";

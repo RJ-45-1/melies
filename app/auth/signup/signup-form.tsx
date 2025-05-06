@@ -43,12 +43,12 @@ export function SignUpForm() {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `https://melies.vercel.app/auth/callback/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_URL!}/auth/callback`,
       },
     });
     console.log("data: ", data);
     if (error) {
-      console.error("Failed to initiate Google sign-in:", error.message);
+      toast.error("Failed to initiate Google sign-in");
     }
   }
 

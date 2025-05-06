@@ -42,3 +42,13 @@ export interface Movie {
   Website: string;
   Response: string;
 }
+
+export type Review = {
+  id: number;
+  user_email: string | null;
+  user_id: string | null;
+  stars: number;
+  content: string;
+  imdb_id: string;
+  created_at?: string;
+};

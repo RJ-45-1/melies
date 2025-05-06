@@ -48,7 +48,7 @@ export function SignInForm() {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `https://melies.vercel.app//auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_URL!}/auth/callback`,
       },
     });
     console.log("data: ", data);

@@ -1,9 +1,12 @@
-import { MovieBasicInfos, MovieBasicInfosSemanticResults } from "@/types";
+import {
+  Movie,
+  MovieBasicInfos,
+  MovieBasicInfosSemanticResults,
+} from "@/types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 // utils/fetchMovies.ts
-const API_KEY = "82571ea7";
-const BASE_URL = `http://www.omdbapi.com/?apikey=${API_KEY}`;
+const BASE_URL = `http://www.omdbapi.com/?apikey=${process.env.NEXT_PUBLIC_IMDB_KEY!}`;
 
 export const fetchRecentMovies = async (): Promise<any[]> => {
   try {
@@ -71,8 +74,6 @@ export const searchSemantic = async (
     },
   );
 
-  console.log(response);
-
   if (!response.ok) {
     const errorText = await response.text();
     console.log("error: ", errorText);
@@ -83,3 +84,34 @@ export const searchSemantic = async (
   const results: MovieBasicInfosSemanticResults[] = await response.json();
   return results;
 };
+
+const OMDB_BASE_URL = `http://www.omdbapi.com/?apikey=${process.env.NEXT_PUBLIC_IMDB_KEY!}`;
+
+export async function fetchMovieById(id: string): Promise<Movie> {
+  const response = await fetch(`${OMDB_BASE_URL}&i=${id}`);
+  const data = await response.json();
+  return data;
+}
+
+export async function fetchMovieTrailer(
+  title: string,
+  year: string,
+): Promise<string> {
+  const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY!;
+  const searchQuery = `${title} ${year} trailer`;
+  const searchResponse = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&key=${apiKey}`,
+  );
+  const searchData = await searchResponse.json();
+
+  if (searchData.error) {
+    return "https://www.youtube.com/embed/0MY9tw2Q7ro?si=4X9L3lgsh8uZWsed";
+  } else {
+    if (searchData.items.length === 0) {
+      return "";
+    }
+  }
+
+  const trailer = searchData.items[0];
+  return `https://www.youtube.com/embed/${trailer.id.videoId}`;
+}
