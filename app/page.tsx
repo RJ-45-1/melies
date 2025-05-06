@@ -73,7 +73,7 @@ export default async function Home() {
           <TrendingUp className="w-6 h-6" />
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70 animate-fade-in">
+        <h1 className="text-4xl md:text-5xl font-bold text-center text-primary animate-fade-in">
           Search and note the best movies
         </h1>
 
