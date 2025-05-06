@@ -367,8 +367,12 @@ function MovieDetailsSkeleton() {
   );
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const movieId = await params.id;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const movieId = (await params).id;
 
   if (!movieId) {
     return notFound();
