@@ -43,7 +43,7 @@ export function SignUpForm() {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `${process.env.NEXT_PUBLIC_URL!}/auth/callback`,
+        redirectTo: `https://melies.vercel.app/auth/callback/auth/callback`,
       },
     });
     console.log("data: ", data);
