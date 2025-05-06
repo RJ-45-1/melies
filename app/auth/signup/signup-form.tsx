@@ -13,8 +13,11 @@ export function SignUpForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault(); // Prevent the default form submission
     setIsLoading(true);
+
+    const formData = new FormData(event.currentTarget);
 
     try {
       const result = await signUp(formData);
@@ -32,7 +35,7 @@ export function SignUpForm() {
 
   return (
     <div className="grid gap-6">
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
@@ -63,7 +66,7 @@ export function SignUpForm() {
           </div>
           <Button disabled={isLoading} type="submit" className="w-full">
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            SignUp
+            Sign Up
           </Button>
         </div>
       </form>

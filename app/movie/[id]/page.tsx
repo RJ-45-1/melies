@@ -389,7 +389,6 @@ async function MovieDetailsContent({ movieId }: { movieId: string }) {
   }
 
   const trailerUrl = await fetchMovieTrailer(movie.Title, movie.Year);
-  console.log("Trailerurl: ", trailerUrl);
-  // const trailerUrl = "https://www.youtube.com/watch?v=9GEaTTlnXLs";
+
   return <MovieDetails movie={movie} trailerUrl={trailerUrl} />;
 }

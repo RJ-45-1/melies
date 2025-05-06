@@ -83,3 +83,25 @@ export const searchSemantic = async (
   const results: MovieBasicInfosSemanticResults[] = await response.json();
   return results;
 };
+
+// utils/fetchMovieQuotes.js
+
+// utils/fetchMovieQuotes.js
+
+export const fetchMovieQuotes = async (movieTitle) => {
+  const agent = new HttpsProxyAgent({
+    rejectUnauthorized: false,
+  });
+
+  const response = await fetch(
+    `https://api.quotable.io/quotes?tags=${encodeURIComponent(movieTitle)}`,
+    { agent },
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch movie quotes");
+  }
+
+  const data = await response.json();
+  return data.results || [];
+};

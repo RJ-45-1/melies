@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { signIn } from "./actions";
 
@@ -13,8 +13,15 @@ export function SignInForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleSubmit(formData: FormData) {
+  useEffect(() => {
+    console.log("Loading: ", isLoading);
+  }, [isLoading]);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault(); // Prevent the default form submission
     setIsLoading(true);
+
+    const formData = new FormData(event.currentTarget);
 
     try {
       const result = await signIn(formData);
@@ -33,7 +40,7 @@ export function SignInForm() {
 
   return (
     <div className="grid gap-6">
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>

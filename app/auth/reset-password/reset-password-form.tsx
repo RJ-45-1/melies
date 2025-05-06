@@ -3,19 +3,21 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { resetPassword } from "./actions";
 
 export function ResetPasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault(); // Prevent the default form submission
     setIsLoading(true);
-    setError(null);
     setSuccess(false);
+
+    const formData = new FormData(event.currentTarget);
 
     try {
       const result = await resetPassword(formData);
@@ -33,7 +35,7 @@ export function ResetPasswordForm() {
 
   return (
     <div className="grid gap-6">
-      <form action={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
@@ -54,7 +56,14 @@ export function ResetPasswordForm() {
             type="submit"
             className="w-full"
           >
-            {isLoading ? "Sending..." : "Send Reset Link"}
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Send Reset Link"
+            )}
           </Button>
         </div>
       </form>
